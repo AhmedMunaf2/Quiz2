@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار الاسم الموصول | النحو والصرف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5edda; --paper-2:#efe3c6; --card:#faf4e4;
+  --ink:#242a22; --ink-soft:#5b5847; --ink-faint:#8b8672;
+  --green:#0f5140; --green-deep:#0a3629; --green-soft:#e3ecdc;
+  --gold:#b8892e; --gold-soft:#d9b662; --gold-pale:#f0e2bc;
+  --red:#a72f2f; --red-soft:#f3ddd6;
+  --line:rgba(36,42,34,.16); --line-strong:rgba(36,42,34,.3);
+  --shadow:0 18px 40px -18px rgba(28,38,30,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans Arabic',sans-serif; color:var(--ink);
+  background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(184,137,46,.14), transparent 60%),
+    radial-gradient(900px 600px at 0% 110%, rgba(15,81,64,.10), transparent 55%),
+    var(--paper);
+  min-height:100vh; line-height:1.7;
+}
+h1,h2,h3,.display{font-family:'Amiri',serif}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid rgba(184,137,46,.65);outline-offset:3px;border-radius:6px}
+
+/* حبيبات الورق */
+.grain{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.06;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ====== الشريط العلوي ====== */
+.topbar{position:sticky;top:0;z-index:50;background:var(--green-deep);color:#f3ecd8;
+  border-bottom:3px solid var(--gold);box-shadow:0 6px 24px -12px rgba(10,54,41,.6)}
+.topbar[hidden]{display:none}
+.tb-inner{max-width:960px;margin:auto;display:flex;align-items:center;gap:1rem;padding:.65rem 1.1rem;flex-wrap:wrap}
+.tb-brand{display:flex;align-items:center;gap:.5rem;font-family:'Amiri';font-weight:700;font-size:1.15rem;white-space:nowrap}
+.tb-star{color:var(--gold-soft);font-size:1.25rem;animation:spinStar 14s linear infinite}
+@keyframes spinStar{to{transform:rotate(360deg)}}
+.tb-progress{flex:1;min-width:180px;display:flex;flex-direction:column;gap:.3rem}
+.tb-count{font-size:.78rem;color:#d9d2b8}
+.tb-count b{color:var(--gold-soft);font-size:.95rem}
+.tb-track{height:6px;background:rgba(243,236,216,.18);border-radius:99px;overflow:hidden}
+.tb-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-soft),var(--gold));border-radius:99px;transition:width .5s cubic-bezier(.6,.1,.2,1)}
+.tb-chip{display:flex;align-items:center;gap:.45rem;font-size:.85rem;background:rgba(243,236,216,.1);
+  border:1px solid rgba(217,182,98,.4);border-radius:10px;padding:.32rem .6rem;white-space:nowrap}
+.tb-chip b{color:var(--gold-soft)}
+.ring{width:26px;height:26px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:3.4;cx:18px}
+.ring-bg{stroke:rgba(243,236,216,.2)}
+.ring-fg{stroke:var(--gold-soft);stroke-dasharray:94.25;stroke-dashoffset:0;stroke-linecap:round;transition:stroke-dashoffset .12s linear,stroke .3s}
+.tb-timer.warn .ring-fg{stroke:#e8896f}
+.tb-timer.warn b{color:#e8896f}
+.tb-score b.pop{animation:pop .45s ease}
+@keyframes pop{40%{transform:scale(1.5);color:#fff}}
+.tb-sound{background:rgba(243,236,216,.1);border:1px solid rgba(217,182,98,.4);border-radius:10px;
+  padding:.3rem .5rem;color:#f3ecd8;line-height:0}
+.tb-sound svg{width:18px;height:18px;fill:currentColor}
+.tb-sound .slash{display:none}
+.tb-sound.off .waves{display:none}
+.tb-sound.off .slash{display:block}
+/* خطوات الماس */
+.tb-steps{max-width:960px;margin:auto;display:flex;justify-content:center;gap:.65rem;padding:.45rem 1rem .75rem;flex-wrap:wrap;background:var(--green-deep)}
+.step{width:9px;height:9px;transform:rotate(45deg);border:1.5px solid rgba(217,182,98,.55);transition:all .3s}
+.step.cur{background:var(--gold-soft);border-color:var(--gold-soft);animation:pulseStep 1.2s ease infinite}
+@keyframes pulseStep{50%{transform:rotate(45deg) scale(1.45)}}
+.step.ok{background:#7fc39a;border-color:#7fc39a}
+.step.bad{background:#e08a76;border-color:#e08a76}
+
+main{max-width:880px;margin:auto;padding:2rem 1.2rem 4rem}
+.screen{display:none}
+.screen.active{display:block;animation:screenIn .5s ease both}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}}
+
+/* ====== الغلاف ====== */
+.cover-ornament{position:absolute;left:50%;top:44%;width:620px;max-width:120vw;transform:translate(-50%,-50%);
+  opacity:.055;animation:spinStar 90s linear infinite;pointer-events:none}
+.cover-wrap{position:relative}
+.plate{position:relative;background:var(--card);border:2px solid var(--gold);box-shadow:var(--shadow),inset 0 0 0 1px var(--card),inset 0 0 0 7px transparent,inset 0 0 0 8px rgba(184,137,46,.35);
+  padding:3.2rem 2rem 2.6rem;text-align:center;overflow:hidden}
+.corner{position:absolute;width:26px;height:26px;border-color:var(--gold);border-style:solid;border-width:0}
+.corner::after{content:"✦";position:absolute;color:var(--gold);font-size:.8rem}
+.c-tl{top:14px;right:14px;border-top-width:3px;border-right-width:3px}.c-tl::after{top:2px;right:4px}
+.c-tr{top:14px;left:14px;border-top-width:3px;border-left-width:3px}.c-tr::after{top:2px;left:4px}
+.c-bl{bottom:14px;right:14px;border-bottom-width:3px;border-right-width:3px}.c-bl::after{bottom:2px;right:4px}
+.c-br{bottom:14px;left:14px;border-bottom-width:3px;border-left-width:3px}.c-br::after{bottom:2px;left:4px}
+.kicker{font-size:.85rem;letter-spacing:.14em;color:var(--gold);font-weight:500}
+.lm{display:block;overflow:hidden}
+.lm>span{display:block;transform:translateY(110%);animation:riseUp .8s cubic-bezier(.2,.7,.2,1) forwards}
+.lm.d1>span{animation-delay:.15s}.lm.d2>span{animation-delay:.3s}
+@keyframes riseUp{to{transform:translateY(0)}}
+.cover-title{font-size:clamp(2.6rem,7vw,4.2rem);font-weight:700;color:var(--green-deep);margin:.4rem 0 .2rem;min-height:1.3em}
+.cover-sub{font-family:'Amiri';font-size:clamp(1.1rem,2.6vw,1.45rem);color:var(--ink-soft)}
+.divider{display:flex;align-items:center;gap:.8rem;margin:1.5rem auto;max-width:340px;color:var(--gold)}
+.divider::before,.divider::after{content:"";flex:1;height:1px}
+.divider::before{background:linear-gradient(to left,transparent,var(--gold))}
+.divider::after{background:linear-gradient(to right,transparent,var(--gold))}
+.cover-rule{max-width:560px;margin:0 auto 1.6rem;color:var(--ink-soft);font-size:.98rem}
+.meta-row{display:flex;justify-content:center;gap:.5rem 1.4rem;flex-wrap:wrap;margin-bottom:1.8rem;font-size:.86rem;color:var(--ink-soft)}
+.meta-row span{display:flex;align-items:center;gap:.45rem}
+.meta-row i{font-style:normal;color:var(--gold);font-size:.7rem}
+.btn-start{position:relative;overflow:hidden;background:var(--green-deep);color:#f6efdb;border:1px solid var(--gold);
+  font-family:'Amiri';font-weight:700;font-size:1.35rem;padding:.8rem 3.2rem;border-radius:12px;
+  box-shadow:0 12px 26px -12px rgba(10,54,41,.7);transition:transform .25s,box-shadow .25s}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 18px 32px -12px rgba(10,54,41,.75)}
+.btn-start::after{content:"";position:absolute;top:0;bottom:0;width:45%;right:-60%;
+  background:linear-gradient(105deg,transparent,rgba(217,182,98,.45),transparent);transform:skewX(-18deg);transition:right .6s ease}
+.btn-start:hover::after{right:120%}
+.btn-hint{display:block;margin-top:.8rem;font-size:.78rem;color:var(--ink-faint)}
+/* الشريط المتحرك */
+.marquee{overflow:hidden;border-block:1px solid var(--line);margin:2.2rem -2rem -2.6rem;padding:.7rem 0;background:var(--paper-2)}
+.marquee-track{display:flex;gap:2.4rem;width:max-content;animation:scrollX 30s linear infinite;font-family:'Amiri';font-size:1.05rem;color:var(--ink-soft);white-space:nowrap}
+.marquee-track b{color:var(--gold);font-weight:400}
+@keyframes scrollX{to{transform:translateX(50%)}}
+
+/* ====== بطاقة السؤال ====== */
+.qcard{position:relative;background:var(--card);border:1px solid var(--line-strong);box-shadow:var(--shadow);
+  padding:2.4rem 2rem 2rem;animation:cardIn .5s cubic-bezier(.2,.7,.2,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateX(-28px)}}
+.qcard.out{animation:cardOut .28s ease both}
+@keyframes cardOut{to{opacity:0;transform:translateX(28px)}}
+.qcard::before{content:"";position:absolute;top:10px;right:2rem;left:2rem;height:3px;
+  background:linear-gradient(to left,transparent,var(--gold) 30%,var(--gold) 70%,transparent)}
+.q-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.q-num{width:58px;height:58px;flex:none;display:grid;place-items:center;position:relative;
+  font-family:'Amiri';font-weight:700;font-size:1.6rem;color:var(--green-deep)}
+.q-num::before{content:"";position:absolute;inset:0;transform:rotate(45deg);border:2px solid var(--gold);background:var(--gold-pale);transition:transform .4s}
+.qcard:hover .q-num::before{transform:rotate(225deg)}
+.q-num span{position:relative;z-index:1}
+.q-kicker{font-size:.78rem;color:var(--gold);letter-spacing:.1em;font-weight:500}
+.q-tag{display:inline-block;font-size:.74rem;background:var(--green-soft);color:var(--green);
+  border:1px solid rgba(15,81,64,.25);padding:.05rem .6rem;border-radius:99px;margin-top:.15rem}
+.q-text{font-size:clamp(1.25rem,3vw,1.6rem);font-weight:700;line-height:1.9;color:var(--ink);margin-bottom:1.6rem}
+.options{display:grid;gap:.7rem}
+.opt{display:flex;align-items:center;gap:.9rem;text-align:right;width:100%;background:#fffdf4;
+  border:1.5px solid var(--line);border-radius:10px;padding:.75rem .9rem;font-size:1rem;color:var(--ink);
+  transition:transform .2s,border-color .2s,background .2s,box-shadow .2s;opacity:0;animation:optIn .45s ease forwards}
+.opt:nth-child(1){animation-delay:.08s}.opt:nth-child(2){animation-delay:.16s}
+.opt:nth-child(3){animation-delay:.24s}.opt:nth-child(4){animation-delay:.32s}
+@keyframes optIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.opt:hover:not(:disabled){transform:translateX(-6px);border-color:var(--gold);box-shadow:0 8px 18px -12px rgba(36,42,34,.4)}
+.opt-letter{flex:none;width:36px;height:36px;display:grid;place-items:center;font-family:'Amiri';font-weight:700;
+  color:var(--green-deep);position:relative;font-size:1.05rem}
+.opt-letter::before{content:"";position:absolute;inset:4px;transform:rotate(45deg);border:1.5px solid var(--gold);background:var(--gold-pale);transition:all .25s}
+.opt-letter span{position:relative;z-index:1}
+.opt-mark{margin-inline-start:auto;flex:none;width:22px;height:22px;display:grid;place-items:center;
+  border-radius:50%;font-size:.8rem;color:#fff;opacity:0;transform:scale(.4);transition:all .3s}
+.opt.is-correct{background:var(--green-soft);border-color:var(--green)}
+.opt.is-correct .opt-letter::before{background:var(--green);border-color:var(--green)}
+.opt.is-correct .opt-letter span{color:#fff}
+.opt.is-correct .opt-mark{opacity:1;transform:scale(1);background:var(--green)}
+.opt.is-wrong{background:var(--red-soft);border-color:var(--red);animation:shake .45s ease}
+.opt.is-wrong .opt-letter::before{background:var(--red);border-color:var(--red)}
+.opt.is-wrong .opt-letter span{color:#fff}
+.opt.is-wrong .opt-mark{opacity:1;transform:scale(1);background:var(--red)}
+.opt.is-dim{opacity:.45}
+@keyframes shake{20%,60%{transform:translateX(7px)}40%,80%{transform:translateX(-7px)}}
+.feedback{margin-top:1.5rem;border-inline-start:4px solid var(--gold);background:var(--paper-2);
+  padding:1.1rem 1.2rem;border-radius:0 10px 10px 0;animation:fbIn .4s ease both}
+@keyframes fbIn{from{opacity:0;transform:translateY(10px)}}
+.feedback.good{border-color:var(--green)}
+.feedback.bad{border-color:var(--red)}
+.fb-title{font-family:'Amiri';font-weight:700;font-size:1.2rem;margin-bottom:.2rem}
+.feedback.good .fb-title{color:var(--green)}
+.feedback.bad .fb-title{color:var(--red)}
+.fb-why{font-size:.92rem;color:var(--ink-soft)}
+.fb-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.btn-next{background:var(--green-deep);color:#f6efdb;border:1px solid var(--gold);border-radius:10px;
+  font-family:'Amiri';font-weight:700;font-size:1.1rem;padding:.55rem 1.9rem;transition:transform .2s,background .2s}
+.btn-next:hover{transform:translateX(-4px);background:var(--green)}
+
+/* ====== النتيجة ====== */
+.res-wrap{max-width:760px;margin:auto}
+.res-head{text-align:center;margin-bottom:1.6rem}
+.res-kicker{font-size:.85rem;letter-spacing:.14em;color:var(--gold);font-weight:500}
+.res-head h2{font-size:clamp(2rem,5vw,2.8rem);color:var(--green-deep);font-weight:700}
+.gauge-wrap{position:relative;width:230px;margin:0 auto 1rem}
+.gauge{width:100%;transform:rotate(-90deg)}
+.gauge circle{fill:none;cx:100px}
+.g-track{stroke:var(--paper-2);stroke-width:13}
+.g-fill{stroke:var(--gold);stroke-width:13;stroke-linecap:round;stroke-dasharray:527.79;stroke-dashoffset:527.79;transition:stroke-dashoffset 1.5s cubic-bezier(.3,.7,.2,1)}
+.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-pct{font-family:'Amiri';font-weight:700;font-size:2.9rem;color:var(--green-deep);line-height:1}
+.gauge-sub{font-size:.85rem;color:var(--ink-faint)}
+.verdict{text-align:center;font-family:'Amiri';font-size:clamp(1.3rem,3.4vw,1.7rem);font-weight:700;color:var(--ink);margin-bottom:1.8rem}
+.verdict small{display:block;font-family:'IBM Plex Sans Arabic';font-weight:400;font-size:.95rem;color:var(--ink-soft);margin-top:.3rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:2rem}
+.stat{background:var(--card);border:1px solid var(--line-strong);border-top:3px solid var(--gold);
+  padding:1rem;text-align:center;box-shadow:0 10px 22px -16px rgba(36,42,34,.4)}
+.stat b{display:block;font-family:'Amiri';font-size:1.7rem;color:var(--green-deep)}
+.stat span{font-size:.8rem;color:var(--ink-soft)}
+.res-actions{display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap;margin-bottom:2.6rem}
+.btn-ghost{background:transparent;color:var(--green-deep);border:1.5px solid var(--green);border-radius:10px;
+  font-family:'Amiri';font-weight:700;font-size:1.05rem;padding:.55rem 1.7rem;transition:background .2s,color .2s}
+.btn-ghost:hover{background:var(--green-deep);color:#f6efdb}
+.review h3{font-size:1.5rem;color:var(--green-deep);margin-bottom:1rem;text-align:center}
+.rev-item{background:var(--card);border:1px solid var(--line);border-inline-start:4px solid var(--green);
+  padding:.9rem 1.1rem;margin-bottom:.7rem;border-radius:8px;font-size:.92rem}
+.rev-item.wrong{border-inline-start-color:var(--red)}
+.rev-q{font-weight:600;margin-bottom:.4rem}
+.rev-q b{color:var(--gold);font-family:'Amiri'}
+.rev-line{display:flex;gap:.4rem;flex-wrap:wrap;color:var(--ink-soft)}
+.rev-line .ok{color:var(--green);font-weight:600}
+.rev-line .bad{color:var(--red);font-weight:600}
+#confetti{position:fixed;inset:0;z-index:90;pointer-events:none}
+
+footer{text-align:center;padding:1.4rem;font-size:.8rem;color:var(--ink-faint);border-top:1px solid var(--line)}
+
+@media (max-width:640px){
+  .plate{padding:2.4rem 1.2rem 2.2rem}
+  .qcard{padding:2rem 1.2rem 1.6rem}
+  .tb-steps{gap:.5rem}
+  .tb-progress{order:5;flex-basis:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .lm>span{transform:none}
+  .opt{opacity:1}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- الشريط العلوي -->
+<header class="topbar" id="topbar" hidden>
+  <div class="tb-inner">
+    <div class="tb-brand"><span class="tb-star">۞</span><span>الاسم الموصول</span></div>
+    <div class="tb-progress">
+      <div class="tb-count">السؤال <b id="tbNow">١</b> من <span>١٦</span></div>
+      <div class="tb-track"><i id="tbFill"></i></div>
+    </div>
+    <div class="tb-chip tb-timer" id="tbTimer">
+      <svg class="ring" viewBox="0 0 36 36" aria-hidden="true">
+        <circle class="ring-bg" cx="18" cy="18" r="15"/>
+        <circle class="ring-fg" id="ringFg" cx="18" cy="18" r="15"/>
+      </svg>
+      <b id="tbTime">٣٠</b><span>ث</span>
+    </div>
+    <div class="tb-chip">النقاط <b id="tbScore">٠</b></div>
+    <button class="tb-sound" id="btnSound" aria-label="تشغيل/إيقاف الصوت">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3z"/>
+        <g class="waves"><path d="M15.5 8.5a4.5 4.5 0 0 1 0 7l-1-1.2a3 3 0 0 0 0-4.6l1-1.2z"/><path d="M17.7 6a8 8 0 0 1 0 12l-1-1.3a6.5 6.5 0 0 0 0-9.4L17.7 6z"/></g>
+        <path class="slash" d="M4 4l16 16-1.4 1.4L2.6 5.4z"/></svg>
+    </button>
+  </div>
+  <div class="tb-steps" id="tbSteps" aria-hidden="true"></div>
+</header>
+
+<main>
+  <!-- ====== الغلاف ====== -->
+  <section class="screen cover active" id="screen-cover">
+    <div class="cover-wrap">
+      <svg class="cover-ornament" viewBox="0 0 200 200" aria-hidden="true">
+        <g fill="none" stroke="#242a22" stroke-width="1.4">
+          <rect x="40" y="40" width="120" height="120"/>
+          <rect x="40" y="40" width="120" height="120" transform="rotate(45 100 100)"/>
+          <circle cx="100" cy="100" r="78"/><circle cx="100" cy="100" r="34"/>
+        </g>
+      </svg>
+      <div class="plate">
+        <span class="corner c-tl"></span><span class="corner c-tr"></span>
+        <span class="corner c-bl"></span><span class="corner c-br"></span>
+        <p class="lm kicker"><span>الاختبارُ التفاعليُّ في النحو والصرف</span></p>
+        <h1 class="cover-title" id="coverTitle">الاسمُ الموصولُ</h1>
+        <p class="cover-sub lm d1"><span>صلةُ الموصولِ · العائدُ · شبهُ الجملةِ</span></p>
+        <div class="divider">✦</div>
+        <p class="cover-rule lm d2"><span>صلةُ الموصول هي الجملةُ أو شبهُ الجملة التي تأتي بعد الاسم الموصول فتُتمِّمُ معناه، ولا يتمُّ الاسمُ الموصول إلا بها.</span></p>
+        <div class="meta-row">
+          <span><i>◆</i> ١٦ سؤالًا</span>
+          <span><i>◆</i> ٣٠ ثانية لكل سؤال</span>
+          <span><i>◆</i> النتيجة والتعليل فورًا</span>
+        </div>
+        <button class="btn-start" id="btnStart">ابدأِ الاختبارَ</button>
+        <span class="btn-hint">تلميح: يمكنك الإجابة باستخدام الأرقام ١ – ٤ من لوحة المفاتيح</span>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" id="marqueeTrack"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== الاختبار ====== -->
+  <section class="screen" id="screen-quiz">
+    <article class="qcard" id="qCard" aria-live="polite">
+      <div class="q-head">
+        <div class="q-num"><span id="qNum">١</span></div>
+        <div>
+          <div class="q-kicker">بَابُ صِلَةِ المَوْصُولِ</div>
+          <span class="q-tag" id="qTag"></span>
+        </div>
+      </div>
+      <h2 class="q-text" id="qText"></h2>
+      <div class="options" id="options" role="list"></div>
+      <div class="feedback" id="feedback" hidden>
+        <div class="fb-title" id="fbTitle"></div>
+        <p class="fb-why" id="fbWhy"></p>
+        <div class="fb-row">
+          <span style="font-size:.8rem;color:var(--ink-faint)">اقرأ التعليل جيدًا قبل المتابعة</span>
+          <button class="btn-next" id="btnNext">السؤال التالي</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ====== النتيجة ====== -->
+  <section class="screen" id="screen-result">
+    <div class="res-wrap">
+      <div class="res-head">
+        <p class="res-kicker">اِنْتَهَى الاختبارُ</p>
+        <h2>نتيجتُكَ في الاسم الموصول</h2>
+      </div>
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="g-track" cx="100" cy="100" r="84"/>
+          <circle class="g-fill" id="gFill" cx="100" cy="100" r="84"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-pct" id="gPct">٠٪</div>
+          <div class="gauge-sub">من ١٦ سؤالًا</div>
+        </div>
+      </div>
+      <p class="verdict" id="verdict"></p>
+      <div class="stats">
+        <div class="stat"><b id="stOk" style="color:var(--green)">٠</b><span>إجابة صحيحة</span></div>
+        <div class="stat"><b id="stBad" style="color:var(--red)">٠</b><span>إجابة خاطئة</span></div>
+        <div class="stat"><b id="stTime">٠٠:٠٠</b><span>الزمن المستغرق</span></div>
+        <div class="stat"><b id="stAcc">٠٪</b><span>نسبة الدقة</span></div>
+      </div>
+      <div class="res-actions">
+        <button class="btn-start" style="font-size:1.1rem;padding:.6rem 2.2rem" id="btnRestart">إعادةُ الاختبارِ</button>
+        <button class="btn-ghost" id="btnReview">مراجعةُ الإجاباتِ</button>
+      </div>
+      <div class="review" id="review">
+        <h3>مراجعةُ الإجاباتِ</h3>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>مُلخَّصُ الاسمِ الموصولِ · وصلتهُ وشروطها · النحوُ والصرفُ</footer>
+
+<script>
+/* ================= البيانات ================= */
+const LETTERS=['أ','ب','ج','د'];
+const Q=[
+{t:"تعريف الصلة",q:"ما الذي يكتمل به معنى «الاسم الموصول»؟",o:["خبر المبتدأ.","صلة الموصول.","المضاف إليه.","الصفة."],a:1,w:"الاسم الموصول لا يتمّ معناه إلا بجملة أو شبه جملة تأتي بعده وتُسمّى «صلة الموصول»."},
+{t:"أنواع الصلة",q:"تنقسم «صلة الموصول» إلى نوعين رئيسيين، وهما:",o:["مفرد وجملة.","جملة وشبه جملة.","مفرد وشبه جملة.","فعلية واسمية فقط."],a:1,w:"صلة الموصول إما جملة (فعلية أو اسمية) وإما شبه جملة (ظرف أو جارّ ومجرور)."},
+{t:"شبه الجملة",q:"أيُّ مما يلي يُعدّ من أنواع «شبه الجملة» التي تقع صلةً للموصول؟",o:["الظرف والجار والمجرور والصفة الصريحة.","الفعل والفاعل.","المبتدأ والخبر.","الحال والتمييز."],a:0,w:"شبه الجملة الواقعة صلةً تكون ظرفًا أو جارًّا ومجرورًا، وأُلحقت بها الصفة الصريحة."},
+{t:"شروط الصلة",q:"من شروط الجملة الواقعة صلةً للموصول أن تكون «خبرية»، فما المقصود بذلك؟",o:["أن تبدأ بفعل ماضٍ حصرًا.","أن تحتوي على خبر للمبتدأ.","أن تحتمل الصدق والكذب.","أن تكون بصيغة الأمر أو النهي."],a:2,w:"الجملة الخبرية هي التي تحتمل الصدق أو الكذب، بخلاف الجملة الإنشائية كالأمر والنهي."},
+{t:"الجملة الإنشائية",q:"لماذا تُعتبر جملة «جاءَ الذي اضْرِبْهُ» خاطئةً نحوياً؟",o:["لأنها لا تحتوي على ضمير عائد.","لأن صلة الموصول جاءت جملة إنشائية (أمر).","لأن العائد محذوف.","لأن الموصول لا يطابق العائد."],a:1,w:"«اضربْهُ» جملة إنشائية طلبية، والإنشائية لا تقع صلةً للموصول؛ إذ يشترط فيها أن تكون خبرية."},
+{t:"مطابقة العائد",q:"الضمير «العائد» في صلة الموصول يجب أن يطابق الاسم الموصول في:",o:["الإعراب فقط.","التعريف والتنكير فقط.","الإفراد والتثنية والجمع والتذكير والتأنيث.","لا يُشترط فيه التطابق."],a:2,w:"العائد يتبع الموصول في الإفراد والتثنية والجمع والتذكير والتأنيث، نحو: جاء اللذان نجحا."},
+{t:"حالة العائد",q:"في جملة «جاءَ الذي نجحَ»، ما حالة الضمير العائد؟",o:["ظاهرٌ موجودٌ بوضوح.","محذوفٌ للتخفيف.","مستترٌ تقديره «هو».","لا يوجد ضمير عائد في هذه الجملة."],a:2,w:"«نجحَ» فعل ماضٍ وفاعله ضمير مستتر تقديره «هو» يعود على الاسم الموصول."},
+{t:"حذف العائد",q:"ما الغرض النحوي من جواز حذف «الضمير العائد» في صلة الموصول؟",o:["للضرورة الشعرية.","للتخفيف.","للتعظيم.","للإيجاز المبهم."],a:1,w:"يُحذف العائد تخفيفًا إذا دلّ عليه دليلٌ وأمِنَ اللبسُ."},
+{t:"حذف العائد",q:"في قوله تعالى ﴿أَيُّهُمْ أَشَدُّ﴾، ما التقدير المحذوف للضمير العائد (المبتدأ)؟",o:["هم أشدُّ.","أشدُّ منه.","إيّاهم أشدُّ.","هو أشدُّ."],a:3,w:"التقدير: «هو أشدُّ»، فحُذف المبتدأ العائد للعلم السامع به."},
+{t:"حذف العائد",q:"الضمير العائد المحذوف في قوله تعالى ﴿وَمَا عَمِلَتْ أَيْدِيهِمْ﴾ كان في محلّ:",o:["رفع فاعل.","جرّ بالإضافة.","نصب مفعول به (التقدير: عملَتْهُ).","جرّ بحرف جرّ."],a:2,w:"التقدير: «عملتْهُ»، فالضمير المحذوف في محل نصب مفعول به."},
+{t:"حذف العائد",q:"التقدير النحوي للضمير العائد المحذوف في قوله تعالى ﴿فَاقْضِ مَا أَنتَ قَاضٍ﴾ هو:",o:["قاضِيهِ.","قاضٍ به.","تقضِيهِ.","قاضيًا له."],a:0,w:"التقدير: «قاضِيهِ»، فقد حُذف العائد المجرور بالإضافة تخفيفًا."},
+{t:"شروط الحذف",q:"لحذف الضمير العائد المجرور بحرف جرّ شروط ثلاثة معاً، أيُّ مما يلي ليس منها؟",o:["أن يُجرّ الموصول بنفس حرف الجرّ.","أن يكون الحرفان بنفس المعنى.","أن يكون حرف الجرّ «اللام» حصرًا.","أن يكون الفعل متماثلًا في اللفظ والمعنى."],a:2,w:"ليس الشرط محصورًا في اللام؛ بل يُحذف العائد مع أيّ حرف جرٍّ اتّحد لفظه ومعناه مع حرف جرّ الموصول."},
+{t:"حذف المجرور",q:"في قول الشاعر «نُصلِّي للذي صلَّتْ قريشٌ…»، أين العائد المحذوف وما تقديره؟",o:["مجرور بالإضافة وتقديره «صلَّتْهُ».","مجرور بحرف الجرّ وتقديره «لهُ».","مرفوع فاعل وتقديره «هي».","منصوب مفعول به وتقديره «إيّاه»."],a:1,w:"العائد محذوف مجرور باللام، والتقدير: «صلَّتْ لهُ»، لتحقق شروط الحذف."},
+{t:"شرط التمام",q:"شرط وقوع «شبه الجملة» صلةً هو التمام، فلم يصحّ «جاء الذي أمسِ» ولا «جاء الذي بكَ»، والسبب:",o:["لأنها جملة إنشائية.","لأن الظرف لا يقع صلةً للموصول.","لأن شبه الجملة هنا ناقصة ولا تفيد معنى تامًا للسامع.","لاختلاف حرف الجرّ."],a:2,w:"شبه الجملة لا تقع صلةً إلا تامةً مفيدة؛ و«أمسِ» و«بكَ» وحدهما لا يفيدان معنى مكتملًا."},
+{t:"شبه الجملة",q:"في جملة «جاء الذي في الدارِ»، ترتبط شبه الجملة بفعل محذوف وجوبًا، ما تقديره؟",o:["ذَهَبَ.","يَجلِسُ.","كَانَ.","اِسْتَقَرَّ."],a:3,w:"يتعلّق الظرف بفعل محذوف وجوبًا تقديره «استقرَّ»."},
+{t:"العائد في شبه الجملة",q:"أين «الضمير العائد» في جملة «جاء الذي في الدارِ»؟",o:["لا يوجد ضمير عائد لشبه الجملة أبدًا.","هو الضمير المستتر الفاعل في الفعل المحذوف «استقرَّ».","هو الكسرة في كلمة «الدارِ».","هو حرف الجرّ «في»."],a:1,w:"العائد هو الضمير المستتر في «استقرَّ» المحذوف، وهو الفاعل العائد على الاسم الموصول."}
+];
+
+/* ================= أدوات عامة ================= */
+const $=id=>document.getElementById(id);
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const toAr=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const pad=n=>toAr(String(n).padStart(2,'0'));
+const TIME_PER_Q=30, RING_C=94.25, GAUGE_C=527.79;
+
+/* ================= الصوت ================= */
+let soundOn=true, actx=null;
+function beep(f,d,type='sine',g=.07,when=0){
+  if(!soundOn)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended')actx.resume();
+    const o=actx.createOscillator(),v=actx.createGain();
+    o.type=type;o.frequency.value=f;
+    const t=actx.currentTime+when;
+    v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(v).connect(actx.destination);o.start(t);o.stop(t+d+.03);
+  }catch(e){}
+}
+const sndClick=()=>beep(560,.06,'triangle',.05);
+const sndOk=()=>{beep(660,.14,'sine',.07);beep(880,.22,'sine',.07,.11)};
+const sndBad=()=>beep(160,.3,'square',.045);
+
+/* ================= حالة الاختبار ================= */
+let idx=0,score=0,answers=[],answered=false,timerId=null,timeLeft=TIME_PER_Q,t0=0;
+
+/* الشريط المتحرك */
+(function(){
+  const items=['الَّذِي','الَّتِي','اللَّذَانِ','اللَّتَانِ','الَّذِينَ','اللَّوَاتِي','مَنْ','مَا','صِلَةُ المَوْصُولِ','العَائِدُ','شِبْهُ الجُمْلَةِ','الخَبَرِيَّةُ'];
+  const half=items.map(x=>`<span>${x} <b>۞</b></span>`).join('');
+  $('marqueeTrack').innerHTML=half+half;
+})();
+
+/* خطوات الماس */
+(function(){
+  const box=$('tbSteps');
+  for(let i=0;i<Q.length;i++){const s=document.createElement('span');s.className='step';box.appendChild(s);}
+})();
+
+/* عنوان متعرّف (تأثير فك الشيفرة) */
+function scramble(el,text){
+  if(RM){el.textContent=text;return;}
+  const pool='ابتثجحخدذرزسشصضطظعغفقكلمنهوي';
+  let f=0,total=26;
+  const iv=setInterval(()=>{
+    f++;
+    el.textContent=text.split('').map((c,i)=>
+      c===' '||c==='ُ'||i<(f/total)*text.length*1.15?c:pool[Math.random()*pool.length|0]
+    ).join('');
+    if(f>=total+6){el.textContent=text;clearInterval(iv);}
+  },45);
+}
+scramble($('coverTitle'),'الاسمُ الموصولُ');
+
+/* ================= التنقل بين الشاشات ================= */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('screen-'+name).classList.add('active');
+  $('topbar').hidden=(name!=='quiz');
+  window.scrollTo(0,0);
+}
+
+/* ================= بدء الاختبار ================= */
+function startQuiz(){
+  idx=0;score=0;answers=[];t0=Date.now();
+  $('tbScore').textContent=toAr(0);
+  showScreen('quiz');
+  renderQuestion(false);
+}
+$('btnStart').addEventListener('click',()=>{sndClick();startQuiz();});
+$('btnRestart').addEventListener('click',()=>{sndClick();startQuiz();});
+$('btnSound').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  $('btnSound').classList.toggle('off',!soundOn);
+  if(soundOn)sndClick();
+});
+
+/* ================= عرض السؤال ================= */
+function renderQuestion(animate){
+  answered=false;
+  const item=Q[idx];
+  const card=$('qCard');
+  const build=()=>{
+    $('qNum').textContent=toAr(idx+1);
+    $('qTag').textContent=item.t;
+    $('qText').textContent=item.q;
+    $('tbNow').textContent=toAr(idx+1);
+    $('tbFill').style.width=((idx)/Q.length*100)+'%';
+    [...$('tbSteps').children].forEach((s,i)=>{
+      s.classList.toggle('cur',i===idx);
+    });
+    const box=$('options');box.innerHTML='';
+    item.o.forEach((txt,i)=>{
+      const b=document.createElement('button');
+      b.className='opt';b.setAttribute('role','listitem');
+      b.innerHTML=`<span class="opt-letter"><span>${LETTERS[i]}</span></span>
+                   <span class="opt-text">${txt}</span>
+                   <span class="opt-mark"></span>`;
+      b.addEventListener('click',()=>choose(i));
+      box.appendChild(b);
+    });
+    $('feedback').hidden=true;
+    $('btnNext').textContent=(idx===Q.length-1)?'عرضُ النتيجةِ':'السؤالُ التالي';
+    card.classList.remove('out');
+    if(!RM)card.style.animation='none',card.offsetHeight,card.style.animation='';
+    startTimer();
+  };
+  if(animate&&!RM){
+    card.classList.add('out');
+    setTimeout(build,260);
+  }else build();
+}
+
+/* ================= المؤقّت ================= */
+function startTimer(){
+  clearInterval(timerId);
+  timeLeft=TIME_PER_Q;
+  updateRing();
+  timerId=setInterval(()=>{
+    timeLeft-=.1;
+    updateRing();
+    if(timeLeft<=0){clearInterval(timerId);choose(null);}
+  },100);
+}
+function updateRing(){
+  const r=Math.max(0,Math.ceil(timeLeft));
+  $('tbTime').textContent=toAr(r);
+  $('ringFg').style.strokeDashoffset=RING_C*(1-Math.max(0,timeLeft)/TIME_PER_Q);
+  $('tbTimer').classList.toggle('warn',timeLeft<=10);
+}
+
+/* ================= الإجابة ================= */
+function choose(sel){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerId);
+  const item=Q[idx];
+  const correct=(sel===item.a);
+  answers.push({sel,correct,timeout:sel===null});
+  const opts=[...$('options').children];
+  opts.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===item.a){b.classList.add('is-correct');b.querySelector('.opt-mark').textContent='✓';}
+    else if(i===sel){b.classList.add('is-wrong');b.querySelector('.opt-mark').textContent='✗';}
+    else b.classList.add('is-dim');
+  });
+  const step=$('tbSteps').children[idx];
+  step.classList.remove('cur');
+  step.classList.add(correct?'ok':'bad');
+  const fb=$('feedback');
+  fb.classList.remove('good','bad');
+  if(sel===null){
+    fb.classList.add('bad');
+    $('fbTitle').textContent='⏳ انتهى الوقتُ!';
+    sndBad();
+  }else if(correct){
+    fb.classList.add('good');
+    $('fbTitle').textContent='إجابةٌ صحيحةٌ ✓';
+    score++;
+    const sc=$('tbScore');sc.textContent=toAr(score);
+    sc.classList.remove('pop');sc.offsetHeight;sc.classList.add('pop');
+    sndOk();
+  }else{
+    fb.classList.add('bad');
+    $('fbTitle').textContent=`إجابةٌ غير صحيحة — الصواب (${LETTERS[item.a]})`;
+    sndBad();
+  }
+  $('fbWhy').textContent=item.w;
+  fb.hidden=false;
+  $('tbFill').style.width=((idx+1)/Q.length*100)+'%';
+}
+
+$('btnNext').addEventListener('click',()=>{
+  sndClick();
+  if(idx===Q.length-1){showResult();}
+  else{idx++;renderQuestion(true);}
+});
+
+/* لوحة المفاتيح */
+document.addEventListener('keydown',e=>{
+  if(!$('screen-quiz').classList.contains('active'))return;
+  const map={'1':0,'2':1,'3':2,'4':3,'١':0,'٢':1,'٣':2,'٤':3};
+  if(!answered&&map[e.key]!==undefined)choose(map[e.key]);
+  else if(answered&&(e.key==='Enter'||e.key===' '))$('btnNext').click();
+});
+
+/* ================= النتيجة ================= */
+function fmtTime(ms){
+  const s=Math.floor(ms/1000);
+  return pad(Math.floor(s/60))+':'+pad(s%60);
+}
+function showResult(){
+  clearInterval(timerId);
+  const elapsed=Date.now()-t0;
+  const pct=Math.round(score/Q.length*100);
+  showScreen('result');
+
+  // العدّاد الدائري
+  const fill=$('gFill');
+  fill.style.strokeDashoffset=GAUGE_C;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    fill.style.strokeDashoffset=GAUGE_C*(1-pct/100);
+  }));
+
+  // عدّاد النسبة
+  const gEl=$('gPct');
+  if(RM){gEl.textContent=toAr(pct)+'٪';}
+  else{
+    const st=performance.now();
+    (function tick(now){
+      const p=Math.min(1,(now-st)/1400);
+      gEl.textContent=toAr(Math.round(pct*(1-Math.pow(1-p,3))))+'٪';
+      if(p<1)requestAnimationFrame(tick);
+    })(st);
+  }
+
+  // الحُكم
+  let v,s;
+  if(pct>=90){v='نحويٌّ بارعٌ 🏅';s='أتقنتَ بابَ صلة الموصول إتقانًا يُحسَدُ عليه.';}
+  else if(pct>=75){v='ممتازٌ جدًا!';s='إتقانٌ واضح مع هفواتٍ يسيرة، أنتَ قريبٌ من الكمال.';}
+  else if(pct>=50){v='جيّدٌ، واصلِ التقدّم';s='أساسُك متين، راجع مواضع الخطأ لتكتمل الصورة.';}
+  else{v='لا بأس، المحاولةُ طريقُ الإتقان';s='أعِد قراءة الملخّص ثم جرّب الاختبار من جديد.';}
+  $('verdict').innerHTML=`${v}<small>${s}</small>`;
+
+  $('stOk').textContent=toAr(score);
+  $('stBad').textContent=toAr(Q.length-score);
+  $('stTime').textContent=fmtTime(elapsed);
+  $('stAcc').textContent=toAr(pct)+'٪';
+
+  // المراجعة
+  $('reviewList').innerHTML=Q.map((it,i)=>{
+    const a=answers[i];
+    const yours=a.sel===null?'لم تُجب (انتهى الوقت)':`(${LETTERS[a.sel]}) ${it.o[a.sel]}`;
+    return `<div class="rev-item ${a.correct?'':'wrong'}">
+      <div class="rev-q"><b>${toAr(i+1)}.</b> ${it.q}</div>
+      <div class="rev-line">إجابتُك: <span class="${a.correct?'ok':'bad'}">${yours}</span></div>
+      ${a.correct?'':`<div class="rev-line">الصوابُ: <span class="ok">(${LETTERS[it.a]}) ${it.o[it.a]}</span> — ${it.w}</div>`}
+    </div>`;
+  }).join('');
+
+  if(pct>=75)confetti();
+}
+
+$('btnReview').addEventListener('click',()=>{
+  sndClick();
+  $('review').scrollIntoView({behavior:RM?'auto':'smooth'});
+});
+
+/* ================= الاحتفال الذهبي ================= */
+function confetti(){
+  if(RM)return;
+  const cv=$('confetti'),cx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const colors=['#b8892e','#d9b662','#0f5140','#e8d9ae','#a72f2f'];
+  const P=Array.from({length:130},()=>({
+    x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.5,
+    w:4+Math.random()*6,h:6+Math.random()*8,
+    vy:1.6+Math.random()*2.6,vx:-1+Math.random()*2,
+    r:Math.random()*Math.PI,vr:-.1+Math.random()*.2,
+    c:colors[Math.random()*colors.length|0]
+  }));
+  const start=performance.now();
+  (function loop(now){
+    cx.clearRect(0,0,cv.width,cv.height);
+    P.forEach(p=>{
+      p.y+=p.vy;p.x+=p.vx;p.r+=p.vr;
+      cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);
+      cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore();
+    });
+    if(now-start<3600)requestAnimationFrame(loop);
+    else cx.clearRect(0,0,cv.width,cv.height);
+  })(start);
+}
+</script>
+</body>
+</html>
